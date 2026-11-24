@@ -1,0 +1,6 @@
+data/
+.preview/
+__pycache__/
+*.pyc
+node_modules/
+Pulso_Propio_Local.zip

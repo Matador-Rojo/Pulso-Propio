@@ -1,0 +1,61 @@
+.pp-forms {
+  --form-ink: var(--ink, #25291d);
+  --form-line: var(--line, #c5c4b4);
+  --form-paper: var(--cream, #fbfaf3);
+  --form-accent: #e8c4ac;
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: clamp(24px, 5vw, 70px) clamp(16px, 4vw, 54px) 64px;
+  color: var(--form-ink);
+}
+.pp-formhead { max-width: 760px; margin: 0 0 2.4rem; }
+.pp-formtag { font: 400 .72rem/1.5 var(--mono, monospace); text-transform: uppercase; letter-spacing: .12em; }
+.pp-formhead h1 { font: italic 400 clamp(2.8rem, 7vw, 5.5rem)/1.1 var(--serif, Georgia); letter-spacing: -.055em; margin: .35em 0 .22em; }
+.pp-formhead p, .pp-aside p, .pp-panel p, .pp-simulated p { line-height: 1.6; max-width: 64ch; }
+.pp-formlayout { display: grid; grid-template-columns: minmax(160px, 1fr) minmax(0, 2.4fr); gap: clamp(24px, 5vw, 78px); border-top: 1px solid var(--form-ink); padding-top: 2rem; align-items: start; }
+.pp-aside h2, .pp-panel h2, .pp-formbody > h2 { margin: 0 0 .55em; font: 500 clamp(1.5rem, 3vw, 2.2rem)/1.15 Georgia, serif; letter-spacing: -.035em; }
+.pp-aside p { font-size: .95rem; }
+.pp-formbody, .pp-field { display: grid; gap: 1rem; }
+.pp-field { gap: .45rem; }
+.pp-field > span, .pp-scale legend { font-weight: 650; line-height: 1.45; }
+.pp-scale { max-width: 100%; min-width: 0; margin: 0; padding: 0 0 1.2rem; border: 0; border-bottom: 1px solid var(--form-line); }
+.pp-scale legend { padding: 0 0 .7rem; }
+.pp-stars, .pp-range { display: flex; }
+.pp-stars { gap: .45rem; }
+.pp-stars label { position: relative; flex: 1; cursor: pointer; }
+.pp-stars input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.pp-stars span { display: grid; place-items: center; min-height: 44px; border: 1px solid var(--form-line); border-radius: .35rem; background: var(--form-paper); }
+.pp-stars input:checked + span { color: #fff; background: var(--form-ink); border-color: var(--form-ink); font-weight: bold; }
+.pp-stars input:focus-visible + span, .pp-forms :is(button,a,select,input,summary,textarea):focus-visible { outline: 3px solid #7b4d28; outline-offset: 3px; }
+.pp-range { justify-content: space-between; font-size: .8rem; margin-top: .35rem; }
+.pp-field textarea, .pp-field select, .pp-field input {
+  width: 100%; min-width: 0; box-sizing: border-box; border: 1px solid var(--form-line);
+  border-radius: .4rem; padding: .7rem .85rem; background: var(--form-paper); color: var(--form-ink); font: inherit;
+}
+.pp-field textarea { resize: vertical; min-height: 5.5rem; }
+.pp-consent { display: flex; align-items: flex-start; gap: .65rem; line-height: 1.5; font-size: .95rem; }
+.pp-consent input { width: 1.15rem; height: 1.15rem; margin-top: .2rem; flex: 0 0 auto; accent-color: #37402a; }
+.pp-forms .pp-btn { display: inline-flex; align-items: center; justify-content: center; gap: .35em; width: fit-content; min-height: 44px; padding: .65em 1.15em; border: 1px solid var(--form-ink); border-radius: 2rem; font-size: .9rem; line-height: 1.3; font-family: inherit; font-weight: 650; color: var(--form-ink); background: var(--form-accent); text-decoration: none; cursor: pointer; }
+.pp-forms .pp-secondary { background: var(--form-paper); }
+.pp-forms .pp-btn:disabled { opacity: .5; cursor: default; }
+.pp-forms .pp-btn:hover:enabled, .pp-forms a.pp-btn:hover { border-color: #636b42; box-shadow: 0 1px 0 #636b42; }
+.pp-notice { margin: .25rem 0; font-weight: 600; line-height: 1.5; }
+.pp-notice:empty { display: none; }
+.pp-adminbody { display: grid; gap: 1.5rem; }
+.pp-panel { padding: clamp(18px, 3vw, 34px); border: 1px solid var(--form-line); background: var(--form-paper); border-radius: .65rem; }
+.pp-login { max-width: 480px; }
+.pp-actions { display: flex; align-items: center; flex-wrap: wrap; gap: .65rem; }
+.pp-panel > .pp-actions { margin-top: 1rem; }
+.pp-record { padding: .9rem 0; border-bottom: 1px solid var(--form-line); overflow-wrap: anywhere; }
+.pp-record summary, .pp-simulated summary { cursor: pointer; font-weight: 650; }
+.pp-record h3 { margin: .7rem 0 .15rem; font-size: 1rem; }
+.pp-record p { margin: 0; white-space: pre-line; }
+.pp-scores { display: grid; grid-template-columns: max-content max-content; gap: .2rem 1rem; }
+.pp-scores dd { margin: 0; font-weight: bold; }
+.pp-simulated { padding: 1.3rem; border-top: 1px solid var(--form-line); }
+.pp-simulated table { border-collapse: collapse; width: min(100%, 520px); }
+.pp-simulated th, .pp-simulated td { border-bottom: 1px solid var(--form-line); padding: .4rem .5rem; text-align: left; }
+@media (max-width: 700px) {
+  .pp-formlayout { grid-template-columns: 1fr; }
+  .pp-aside { max-width: 60ch; }
+}
