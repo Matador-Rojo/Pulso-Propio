@@ -1,139 +1,198 @@
-# Pulso Propio
+<div align="center">
 
-Guía multimedia para artistas emergentes peruanos. Sigue una canción desde la primera letra hasta su ficha de créditos. El laboratorio permite escuchar qué cambia al elegir otro timbre, dejar dos pulsos de silencio o añadir percusión.
+<br>
 
-## Abrir en Windows
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="./public/assets/pulso-logo-dark.svg">
+  <source media="(prefers-color-scheme: light)" srcset="./public/assets/pulso-logo-light.svg">
+  <img alt="Pulso Propio" src="./public/assets/pulso-logo-light.svg" width="320">
+</picture>
 
-1. Extrae todo el ZIP en una carpeta con permiso de escritura. El equipo necesita Python 3.10 o posterior y un navegador moderno. La versión comprobada fue Python 3.14 en Windows con Chrome.
-2. Haz doble clic en **Iniciar.cmd**. Se abrirá la portada en [127.0.0.1:8765](http://127.0.0.1:8765/). Mantén abierta la ventana de la consola mientras uses la guía.
-3. Para cerrar el servidor, pulsa **Ctrl+C** en esa consola. El cuaderno y las respuestas guardadas estarán disponibles en la siguiente sesión.
+<h3>La IA propone. <em>Tú decides.</em></h3>
 
-También puedes abrir una terminal en la carpeta extraída y ejecutar:
+<p>
+  <strong>Guía práctica digital multimedia, laboratorio musical Web Audio y comunidad moderada</strong><br>
+  para artistas emergentes del Perú que integran inteligencia artificial asistiva en sus canciones sin perder autoría ni transparencia.
+</p>
+
+<p>
+  <a href="https://matadorrojo.pythonanywhere.com/">
+    <img src="https://img.shields.io/badge/Demo_en_vivo-matadorrojo.pythonanywhere.com-9E2F1A?style=for-the-badge" alt="Demo en vivo">
+  </a>
+  <img src="https://img.shields.io/badge/Python-3.10%2B-181814?style=for-the-badge&logo=python&logoColor=F5F1E6" alt="Python 3.10+">
+  <img src="https://img.shields.io/badge/Frontend-Vanilla_ESM_(0_build)-244738?style=for-the-badge" alt="Vanilla ESM sin build">
+  <img src="https://img.shields.io/badge/SQLite-Local_%2B_WSGI-8C5A14?style=for-the-badge&logo=sqlite&logoColor=white" alt="SQLite">
+  <img src="https://img.shields.io/badge/WCAG-AAA_21:1_(0_axe)-181814?style=for-the-badge" alt="WCAG AAA 21:1">
+</p>
+
+<p>
+  <a href="#qué-incluye">Qué incluye</a> ·
+  <a href="#laboratorio-de-5-estaciones">Laboratorio</a> ·
+  <a href="#inicio-rápido">Inicio rápido</a> ·
+  <a href="#despliegue-pythonanywhere-vs-github-pages">Despliegue</a> ·
+  <a href="#arquitectura-y-librerías">Arquitectura</a> ·
+  <a href="#verificación-y-calidad">Verificación</a>
+</p>
+
+<br>
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="./docs/preview-estudio.png">
+  <source media="(prefers-color-scheme: light)" srcset="./docs/preview-papel.png">
+  <img alt="Portada de Pulso Propio con carrusel de 4 vinilos originales" src="./docs/preview-papel.png" width="100%">
+</picture>
+
+<sub>Portada interactiva en modos <strong>Papel</strong> y <strong>Estudio</strong> (más tema <strong>AAA 21:1</strong> con acento amarillo). El carrusel rota automáticamente 4 discos originales cada 5 s y se congela al reproducir.</sub>
+
+</div>
+
+---
+
+## Por qué existe Pulso Propio
+
+Los informes internacionales recientes con músicos independientes (**Ditto Music, Sonarworks, LANDR y Deezer/UMG, 2025–2026**) muestran dos realidades claras:
+
+- **Más del 70 %** de los artistas que adoptan IA la usan de forma **asistiva** —separación de *stems*, limpieza vocal, masterización y lluvia de ideas—, no para reemplazar su composición ni su voz.
+- **Más del 80 %** de la audiencia exige **etiquetado transparente** cuando una canción incorpora IA.
+
+**Pulso Propio** traduce esa realidad al contexto musical peruano (Indecopi, D.L. 822, Ley 28131, Art. 15 del Código Civil, APDAYC y DS 115-2025-PCM) en una plataforma local-first y sin cuentas obligatorias, creada en la **Universidad Peruana de Ciencias Aplicadas (UPC)** para *Nuevos Medios y Nuevas Tendencias*.
+
+---
+
+## Qué incluye
+
+| Sección | Ruta | Contenido principal |
+| :--- | :--- | :--- |
+| **Inicio** | `#/` | Portada limpia con **carrusel de 4 vinilos originales** (*Surco abierto*, *Pulso andino*, *Aire limeño* y *Silencio final*), visualizador de audio en vivo y acceso directo a la mesa de trabajo. |
+| **Guía multimedia** | `#/guia` | **5 etapas reales** (*Idear, Componer, Producir, Proteger, Publicar*) y **12 lecciones** con bloque de realidad **+70 % IA asistiva**, cuadros *«La IA propone vs. Tú decides»*, prompts ROCEF, videos **Plyr**, auto-lectura al llegar al final y casos peruanos. |
+| **Laboratorio musical** | `#/laboratorio` | **5 estaciones prácticas interactivas** (Mini-DAW con exportación MIDI/WAV, Comparador A/B con `WaveSurfer.js` + Duelo Arcade, Taller de Letras y Prompts con sílabas en español, Inspector de Estrenos y Mesa de Créditos Drag & Drop). |
+| **Videoteca** | `#/videos` | **6 estudios audiovisuales** en VP8/Opus (`3 × 0:28` de escucha A/B + `3 × 0:48` por capítulos sobre voces, créditos y circulación), reproducidos con **Plyr** (velocidad `0.75×–1.5×`, subtítulos WebVTT, PiP y saltos por capítulo). |
+| **Casos prácticos** | `#/casos` | **6 casos reales de Perú y Latinoamérica** (*Nelly Cahuana*, *«Qué bonito» / Liliana Artezano*, *Saigo*, *«Bonito, bonito»*, *«Que Hablen de Mí»*, *«Ahora soy mi prioridad»*), **12 decisiones de estudio** y **14 referencias internacionales** (EN · FR · ES). |
+| **Catálogo** | `#/herramientas` | **16 herramientas documentadas** (AIVA, Ollama, Synthesizer V, ACE Studio, Kits AI, Basic Pitch, Suno, Udio, ElevenLabs Music, Moises, Lalal.ai, BandLab, LANDR, Mubert, Adobe Podcast y MusicGen) con búsqueda aproximada vía **Fuse.js**. |
+| **Comunidad y difusión** | `#/comunidad` | Foro abierto y vitrina multimedia en **SQLite**: enlaces `https://` validados, declaración visible de transparencia IA, contacto para colaborar, apoyos, hilos de respuesta y **moderación desde `#/admin`**. |
+| **Mi cuaderno** | `#/cuaderno` | Avance de lecciones, **conteo de respuestas correctas**, favoritos, apuntes y **Bitácora creativa por canción** (*Elegido / Modificado / Descartado*). |
+| **Antes de publicar** | `#/checklist` | Ficha editable de 8 dimensiones, plantillas de crédito y **exportación local a PDF** con `pdf-lib` (soporte completo de tildes y Unicode). |
+| **Galería y Equipo** | `#/galeria`, `#/evaluacion`, `#/admin` | 3 afiches curatoriales en `<dialog>` interactivo, formulario anónimo de evaluación con consentimiento y panel administrativo con exportación CSV, edición de notas y moderación de Comunidad. |
+
+---
+
+## Laboratorio de 5 estaciones
+
+<div align="center">
+<table>
+  <tr>
+    <td width="50%">
+      <img src="./docs/preview-daw.png" alt="Estudio Multipista Mini-DAW 16 pasos en tema Estudio">
+      <br><sub><strong>01 · Estudio Multipista:</strong> piano roll de 16 pasos × 6 notas, 3 pistas rítmicas (Bajo, Cajón grave/agudo), 4 escalas, filtro/eco/swing y exportación real <code>.MIDI</code> y <code>.WAV</code>.</sub>
+    </td>
+    <td width="50%">
+      <img src="./docs/preview-comunidad.png" alt="Comunidad y difusión multimedia con SQLite">
+      <br><sub><strong>Comunidad y difusión:</strong> comparte proyectos con enlaces <code>https://</code>, declara transparencia IA, responde hilos en vivo y modera desde <code>#/admin</code>.</sub>
+    </td>
+  </tr>
+</table>
+</div>
+
+1. **`01 · Estudio Multipista`** (`#/laboratorio`) — Mini-DAW de 16 pasos en Web Audio con comparación frente a un *Loop IA saturado*, medidor de *Aire y firma humana* y descarga directa en **`.mid`** y **`.wav`**.
+2. **`02 · Oído y A/B WaveSurfer`** (`#/laboratorio/oido`) — **Comparador A/B local con `WaveSurfer.js`** para cargar tus propios dos audios (stems, limpieza vocal o máster) e igualar volumen percibido (`−12 dB` a `+6 dB`), más el duelo arcade **Oído a Ciegas** con 3 vidas y racha.
+3. **`03 · Letras y Prompts`** (`#/laboratorio/letras`) — Editor con **contador silábico en español** (diptongos, hiatos y sinalefas), inserción de metatags (`[Verse]`, `[Chorus]`, `[Voz cálida]`) y constructor de **Prompts ROCEF** listos para copiar.
+4. **`04 · Inspector de Estrenos`** (`#/laboratorio/semaforo`) — Simulador de auditoría musical donde abres 3 sobres sellados de evidencia y estampas **APROBADO / RETENIDO / BLOQUEADO** cuidando tu reputación.
+5. **`05 · Mesa de Créditos`** (`#/laboratorio/creditos`) — Puzzle **Drag & Drop** (también táctil y por teclado) de 4 canales de consola para acreditar aportes humanos e IA evitando etiquetas engañosas.
+
+---
+
+## Inicio rápido
+
+### En Windows (un clic)
+1. Asegúrate de tener **Python 3.10+** (probado en Python 3.14 con Chrome).
+2. Ejecuta **`Iniciar.cmd`** o abre una terminal en la carpeta del proyecto:
 
 ```powershell
-py -3 server.py --open-browser
+python server.py --open-browser
 ```
 
-Si Windows reconoce `python` en lugar de `py`, usa `python server.py --open-browser`. Para elegir otro puerto, añade `--port 8770`. Conserva la misma dirección, puerto y perfil de navegador cuando quieras recuperar tu cuaderno.
+Se abrirá automáticamente en [`http://127.0.0.1:8765/`](http://127.0.0.1:8765/). Para usar otro puerto añade `--port 8770`.
 
-### Acceso del equipo
-
-Ejecuta este comando desde la misma carpeta. La consola te pedirá una clave nueva de 12 a 128 caracteres y su confirmación. También sirve para cambiarla e invalidar las sesiones previas.
+### Configurar clave administrativa (`#/admin`)
 
 ```powershell
-py -3 server.py --set-password
+python server.py --set-password
 ```
 
-Entra en **Administración**, al pie de la página, desde el equipo anfitrión. Puedes revisar las evaluaciones, descargar un CSV compatible con Excel y actualizar las introducciones y notas editoriales de las lecciones. La cuenta se configura localmente y el ZIP se entrega con una base vacía.
+Crea una clave local de 12 a 128 caracteres (derivada con `scrypt`). Desde **Administración** (en el pie de página, solo accesible en `localhost` en modo local) podrás revisar evaluaciones reales, descargar CSV compatible con Excel, editar notas editoriales y **moderar publicaciones de Comunidad**.
 
-Para una sesión con celulares en una red privada compartida, inicia el servidor de esta forma:
+### Probar con celulares en la misma red Wi-Fi
 
 ```powershell
-py -3 server.py --host 0.0.0.0
+python server.py --host 0.0.0.0
 ```
 
-Consulta la IPv4 del adaptador Wi-Fi con `ipconfig`. En el celular abre `http://IP-DEL-EQUIPO:8765/`. El equipo debe estar encendido y su firewall debe permitir la conexión desde esa red privada. El teléfono puede consultar la guía y enviar su evaluación. La administración queda restringida a localhost en el equipo anfitrión.
+Abre `http://<TU-IP-LOCAL>:8765/` desde el teléfono. La administración permanece bloqueada fuera de `localhost`.
 
-## Un recorrido para probar la guía
+---
 
-1. Reproduce **Surco abierto** en la portada. Es una pieza instrumental original de 16 segundos.
-2. Abre **Guía → Voces generadas con IA**. Lee el caso, elige una respuesta y consulta su explicación. Escribe qué revisarías para tu propia canción y guarda la lección en favoritos.
-3. En **Laboratorio**, escucha la base y tu versión. Conserva el tempo mientras comparas dos timbres. Después cambia solo el silencio final. Puedes retomar los parámetros en la próxima visita.
-4. En **Explorar → Videos educativos** reproduce *Dejar un silencio*, *Cambiar el timbre* o la sesión sobre balance. Cada video dura 28 segundos e incluye una comparación audible, subtítulos en español y una transcripción con saltos por tiempo.
-5. Abre **Checklist de publicación**. Registra qué hizo cada persona, en qué intervino la IA y qué permisos siguen pendientes. Genera una declaración a partir de tus anotaciones, corrígela y descarga la ficha en PDF.
-6. Consulta **Mi cuaderno** para recuperar lecturas, favoritos, ejercicios y apuntes. El formulario de evaluación permite enviar voluntariamente tres valoraciones y dos comentarios abiertos al equipo.
+## Despliegue: PythonAnywhere vs. GitHub Pages
 
-### Contenido y procedencia
+| Capacidad | PythonAnywhere (`webapp.py`) | GitHub Pages (solo estático) |
+| :--- | :---: | :---: |
+| Inicio, 4 vinilos, Guía, 5 estaciones del Laboratorio, Videos, Catálogo, Cuaderno y PDF | ✅ Completo | ⚠️ Solo si se adaptan rutas a relativas |
+| **Comunidad y difusión (`SQLite`, hilos y apoyos)** | ✅ **Completo** | ❌ Sin backend Python/SQLite |
+| **Evaluaciones reales y exportación CSV** | ✅ **Completo** | ❌ Sin backend Python/SQLite |
+| **Panel `#/admin` (moderación y notas en vivo)** | ✅ **Completo** | ❌ Sin backend Python/SQLite |
 
-| Material académico | Decisión en la implementación |
-|---|---|
-| Trabajo parcial | Las doce lecciones distinguen letra, interpretación, melodía, arreglo, producción y circulación. Cada caso pide una decisión que el artista pueda explicar. |
-| Informe de evaluación de propuestas | El apartado administrativo «Prueba simulada del cuestionario» reproduce los conteos agregados documentados de 23 registros generados por IA. El formulario de usabilidad guarda exclusivamente los envíos de esta aplicación. |
-| Tres propuestas y PESTEL | La guía es el recorrido principal. Los videos breves tienen lectura alternativa. Las fichas de herramientas y las lecciones sobre permisos llevan a las fuentes consultadas. |
-| Business Model Canvas | El acceso educativo, las prácticas y la descarga de la ficha funcionan sin cuenta ni servicios de pago. La validación con artistas y los posibles socios siguen pendientes. |
+> **Recomendación oficial:** usa **GitHub** como repositorio fuente y despliega la aplicación en vivo en **PythonAnywhere** con [`webapp.py`](./webapp.py) (`application = app`), definiendo `PULSO_DATA_DIR` y `PULSO_HOST` en tu configuración WSGI para mantener 100 % activas todas las funciones de base de datos, Comunidad y Administración.
 
-Las cuatro fuentes se usaron como documentación del proyecto. La investigación del trabajo parcial con 20 participantes, la prueba sintética del cuestionario y las futuras evaluaciones del sitio corresponden a tres conjuntos diferentes. Las pruebas de software utilizan una base temporal.
+---
 
-Los tres PNG de la galería son copias sin recomprimir de los archivos originales disponibles en el equipo. La galería conserva cada composición completa, admite ampliación y tiene navegación por teclado. La portada del disco, la grabación, las ilustraciones de la mesa y los estudios audiovisuales son recursos originales de esta implementación.
+## Arquitectura y librerías
 
-## Arquitectura y mantenimiento
+Pulso Propio no requiere paso de *build* ni CDNs externos: todos los módulos, fuentes tipográficas OFL (*Work Sans*, *Playfair Display Italic*, *IBM Plex Mono*) y librerías cliente se sirven localmente bajo **CSP estricta (`default-src 'self'; script-src 'self'; style-src 'self'`)**, compresión `gzip`, `ETag` y soporte **PWA offline**.
 
-| Parte | Archivo o carpeta | Responsabilidad |
-|---|---|---|
-| Servidor | `server.py`, `schema.sql`, `data/pulso.sqlite3` | Recursos estáticos, solicitudes por rango para multimedia, consentimiento, evaluaciones, sesiones, notas y exportación CSV. |
-| Navegación | `public/index.html`, `public/app.js`, `public/styles.css` | Inicio, rutas con hash, historial del navegador, foco y cuaderno. |
-| Aprendizaje | `public/curriculum.js`, `guide.js` | 12 lecciones y 12 casos con alternativas, feedback específico, bibliografía y actividades de práctica. |
-| Producción | `public/studio.js`, `public/media/`, `public/assets/` | Web Audio, reproductores, videos VP8/Opus, subtítulos WebVTT, arte y grabación de portada. |
-| Publicación | `public/checklist.js`, `sheet-pdf.js`, `public/vendor/` | Ocho dimensiones editables, redacción de créditos y PDF local. |
-| Herramientas y afiches | `public/catalog.js`, `gallery.js`, `public/art/` | Diez herramientas documentadas con filtros y búsqueda y tres afiches con comentarios curatoriales. |
-| Equipo del curso | `public/admin.js`, `public/admin.css` | Formulario, revisión de respuestas y edición de contenidos por sesión administrativa. |
+| Capa | Archivos clave | Responsabilidad |
+| :--- | :--- | :--- |
+| **Backend & WSGI** | [`server.py`](./server.py), [`webapp.py`](./webapp.py), [`schema.sql`](./schema.sql) | Servidor HTTP + Flask WSGI, Byte-Range `206`, SQLite (evaluaciones, notas, comunidad), sesiones `HttpOnly` + CSRF y cabeceras de seguridad. |
+| **Núcleo UI & Scroll** | [`public/index.html`](./public/index.html), [`public/app.js`](./public/app.js), [`public/styles.css`](./public/styles.css) | Enrutador hash, View Transitions, carrusel de 4 vinilos, 3 temas (*Papel*, *Estudio*, *AAA 21:1*), scrollbar personalizado, **Lenis** y Mi Cuaderno + Bitácora. |
+| **Guía & Casos** | [`public/curriculum.js`](./public/curriculum.js), [`public/cases.js`](./public/cases.js), [`public/guide.js`](./public/guide.js) | 5 etapas, 12 lecciones con auto-lectura, 6 casos reales Perú/LatAm y 14 referencias internacionales. |
+| **Laboratorio & Videos** | [`public/studio.js`](./public/studio.js), [`public/lab-tools.js`](./public/lab-tools.js), [`public/media/`](./public/media/) | Mini-DAW 16 pasos + exportación MIDI/WAV, **WaveSurfer.js** A/B, Taller de Letras y Prompts, juegos interactivos y 6 videos con **Plyr**. |
+| **Catálogo, Ficha & Comunidad** | [`public/catalog.js`](./public/catalog.js), [`public/checklist.js`](./public/checklist.js), [`public/community.js`](./public/community.js), [`public/admin.js`](./public/admin.js) | Búsqueda fuzzy **Fuse.js**, generación PDF con **pdf-lib**, galería `<dialog>`, Comunidad SQLite y panel administrativo. |
 
-**Persistencia.** Las lecturas, respuestas a los casos, parámetros del laboratorio y ficha personal permanecen en el almacenamiento del navegador. Las evaluaciones enviadas con consentimiento y las actualizaciones editoriales se escriben en SQLite en el equipo que sirve la guía. Las respuestas abiertas se muestran como texto. Cada envío lleva un identificador para que un reintento no duplique la evaluación. Las ediciones administrativas usan revisiones para detectar cambios concurrentes.
+### Librerías de código abierto integradas localmente (`public/vendor/`)
+- **[Lenis](https://github.com/darkroomengineering/lenis)** (MIT) — Scroll suave con inercia (desactivado automáticamente con `prefers-reduced-motion`).
+- **[Fuse.js](https://github.com/krisk/fuse)** (Apache 2.0) — Búsqueda aproximada tolerante a errores tipográficos en el catálogo.
+- **[Plyr](https://github.com/sampotts/plyr)** (MIT) — Reproductor accesible de video con velocidad, subtítulos y PiP.
+- **[WaveSurfer.js](https://github.com/katspaugh/wavesurfer.js)** (BSD-3-Clause) — Formas de onda sincronizadas para el Comparador A/B local.
+- **[pdf-lib 1.17.1](https://github.com/Hopding/pdf-lib)** (MIT) — Generación de la ficha de publicación PDF directamente en el navegador.
 
-**Operación.** La base reside fuera de la carpeta pública. Para respaldarla, detén el servidor y copia la carpeta `data` completa. Para probar con otra base se puede usar `--data-dir RUTA` tanto al iniciar como al establecer la clave. Servir únicamente `public` con un alojamiento estático dejaría fuera las evaluaciones y el editor. Una publicación en Internet requiere desplegar la API con almacenamiento persistente, HTTPS y administración adaptada al entorno. La configuración entregada está orientada a ejecución local.
+---
 
-**Producción de recursos.** Los archivos finales vienen incluidos. Para regenerar las ilustraciones y la grabación de portada, `scripts/make_session.py` usa Pillow y NumPy. Para los videos, `scripts/render_studio.py` usa además libopus y admite `--opus RUTA_A_LA_BIBLIOTECA`. Las tipografías distribuidas con el sitio tienen sus avisos en `public/fonts/OFL.txt`. La distribución local de pdf-lib incluye su licencia en `public/vendor/`.
-
-## Verificación
-
-El cliente se sirve como módulos JavaScript nativos. Puede ejecutarse directamente desde el servidor, sin instalar paquetes ni generar un bundle. Las pruebas reproducibles son:
+## Verificación y calidad
 
 ```powershell
-py -3 -m compileall -q server.py scripts tests
-py -3 -m unittest discover -s tests -v
-```
+# 1. Compilación y pruebas unitarias del servidor (8 pruebas: API, Range, CSRF, Comunidad y moderación)
+python -m compileall -q server.py webapp.py scripts tests
+python -m unittest discover -s tests -v
 
-Para las pruebas de navegador se necesita Node.js, Playwright y Chromium. Instala Playwright como dependencia de desarrollo en el entorno de pruebas y ejecuta `npx playwright install chromium` o indica el Chrome instalado con `CHROME_BIN`. Si Playwright se encuentra fuera de la carpeta de trabajo, define `PLAYWRIGHT_HOME` con la ruta de su paquete.
-
-```powershell
+# 2. Pruebas E2E en navegador real (requiere Playwright + Chrome)
 node tests/journey.cjs
 node tests/checklist.cjs
+
+# 3. Auditoría visual y de accesibilidad (18 rutas × 4 viewports × 3 temas)
+$env:AUDIT_THEMES = "light,dark,contrast"
+$env:AUDIT_STRICT = "1"
+node tests/audit.cjs
+
+# 4. Empaquetado limpio con base SQLite recién inicializada
+python scripts/package_project.py
 ```
 
-El recorrido integrado crea una base temporal y una clave aleatoria. En un entorno que restringe conexiones a localhost, `node tests/journey.cjs --pipe` comunica Chromium con el mismo manejador HTTP de Python mediante un canal local entre procesos. Para repetir las pruebas unitarias usando sockets en un equipo que lo permita, configura `$env:PULSO_HTTP_TESTS = 'tcp'`.
+**Resultados verificados en esta versión:**
+- **Pruebas unitarias (`unittest`):** `8/8 OK`.
+- **Recorrido integrado (`journey.cjs`) y Ficha PDF (`checklist.cjs`):** `OK`.
+- **Auditoría automatizada (`audit.cjs` — 18 rutas × 4 viewports `1440/1280/390/320` × 3 temas):** `0` errores de consola/CSP, `0` errores de página, `0` respuestas HTTP ≥ 400, `0` desbordamientos horizontales y **`0` incidencias `axe-core`** (críticas, serias, moderadas ni menores).
+- **Empaquetado (`Pulso_Propio_Local.zip`):** 93 archivos verificados con integridad ZIP comprobada.
 
-**Resultados de esta entrega.** Pasaron las siete pruebas automatizadas del servidor, incluida la migración de datos previos. Se inició el servidor y se verificaron el procesamiento HTTP y la persistencia en SQLite. Chrome reprodujo la pista de la portada y los tres videos. El recorrido verificó el laboratorio, los favoritos tras recargar, los filtros, la ampliación de afiches, la ficha PDF, un envío de evaluación, el acceso administrativo, la descarga CSV y la lectura de una introducción editada y de una nota publicada. Se comprobaron 12 vistas a 360 px y se inspeccionó la portada de escritorio a 1440 px. Las pruebas específicas de PDF incluyeron texto largo, acentos y caracteres fuera del alfabeto latino. Los datos de prueba se mantuvieron en bases temporales.
+---
 
-**Alcance comprobado.** La conexión TCP del navegador a localhost quedó bloqueada en el entorno de trabajo, por lo que el recorrido integrado se ejecutó con `--pipe`. La prueba móvil se realizó en Chrome a tamaño de teléfono. Siguen pendientes la prueba en una red Wi-Fi con un celular físico, la validación con artistas y la revisión especializada de las orientaciones sobre derechos antes de una difusión institucional.
-
-## Investigación y decisiones técnicas
-
-Consulta realizada el 23 de noviembre de 2026. Los precios y permisos que aparecen en el catálogo corresponden a la documentación pública del proveedor en esa fecha. Cada ficha enlaza la fuente para poder comprobar cambios de plan. La investigación cubrió documentación, repositorios, licencias y ejemplos públicos. Las pruebas descritas en este README corresponden a las funciones implementadas por Pulso Propio.
-
-### Del directorio a la práctica musical
-
-En [AIFINDY](https://aifindy.com/) se abrieron [Música, audio y voz](https://aifindy.com/categorias/musica-audio-voz), [Audio y voz](https://aifindy.com/categorias/buscar-e-investigar-1-1), [Video](https://aifindy.com/categorias/video), [Diseño](https://aifindy.com/categorias/diseo-logos-3d), [Educación](https://aifindy.com/categorias/educacin), [Programación](https://aifindy.com/categorias/programacion), [Automatización](https://aifindy.com/categorias/automatizacin), [Recursos](https://aifindy.com/categorias/recursos) y [Presentaciones](https://aifindy.com/categorias/diapositivas-y-presentac). Las fichas de AIVA, Mubert y Adobe Podcast condujeron a sus sitios oficiales. Una limitación concreta del directorio es que clasifica Adobe Podcast como gratis, mientras que Adobe documenta planes y límites distintos. Se escribieron fichas propias con fuentes primarias. El sitio sirve una selección local y prescinde de consultas a AIFINDY durante el uso.
-
-| Recurso | Función | Licencia o condiciones | Costo | Viabilidad y decisión |
-|---|---|---|---|---|
-| [AIVA](https://www.aiva.ai/about-us) | Componer y exportar MIDI | El plan gratuito exige atribución y uso no comercial | Freemium | Ficha educativa para intervenir acordes descargados. |
-| [Ollama](https://github.com/ollama/ollama) y [Qwen2.5 1.5B](https://ollama.com/library/qwen2.5:1.5b) | Variaciones de letras | MIT para el motor, Apache 2.0 para esa variante | Local, sin suscripción | Recomendación opcional. Descargar y ejecutar un modelo añade memoria y almacenamiento. |
-| [Kits AI](https://www.kits.ai/pricing) | Cambiar el timbre de una voz cantada | Condiciones distintas para [modelos de biblioteca](https://app.kits.ai/static/legal/royalty-free-license.pdf) y [de artista](https://app.kits.ai/static/legal/artist-model-license.pdf) | Freemium | Ficha que advierte de la procedencia de la voz y los cero minutos de descarga gratuitos. |
-| [Spotify Basic Pitch](https://github.com/spotify/basic-pitch) | Transcribir audio a notas MIDI | Apache 2.0 | Gratuito | Recomendado para tomas de un instrumento. La demostración oficial evita instalar un motor dentro de la guía. |
-| [Suno](https://help.suno.com/en/articles/2410177) | Generar letra, acompañamiento y canto | Condiciones del servicio según el plan al generar | Freemium | Ejemplo para distinguir una maqueta de una canción con permisos de comercialización. |
-| [Moises](https://help.moises.ai/hc/en-us/articles/29530482524316-Which-instruments-can-be-separated-on-the-Free-plan) | Separar pistas | Servicio propietario | Freemium | Ejercicio externo con audio propio. El nivel gratuito limita cantidad, duración y combinaciones. |
-| [BandLab Mastering](https://help.bandlab.com/hc/en-us/articles/360001374513-Using-BandLab-Mastering-on-your-songs) | Comparar tratamientos de masterización | Servicio propietario | Cuatro ajustes gratuitos, otros por membresía | Ficha para comparar timbre y dinámica a volumen similar. |
-| [Mubert Render](https://mubert.com/es/render/docs/subscription-agreement) | Música de acompañamiento audiovisual | Ambassador requiere crédito y enlace en contenido propio sin monetización | Freemium | Ficha externa. El plan excluye el uso en aplicaciones, por lo que no se incorporó su audio. |
-| [Adobe Podcast](https://podcast.adobe.com/en/plans) | Limpiar una voz hablada | Servicio propietario | Freemium | Ejemplo de producción de entrevistas. El límite gratuito consultado es de 30 minutos por archivo y una hora diaria. |
-| [MusicGen](https://github.com/facebookresearch/audiocraft/blob/main/model_cards/MUSICGEN_MODEL_CARD.md) | Generar música guiada por texto o melodía | Código MIT y pesos CC BY-NC 4.0 | Modelo descargable, requiere cómputo | Ficha de estudio. Los pesos y su inferencia quedan fuera de la instalación. |
-
-En video se evaluó [Runway](https://runway.com/pricing), que ofrece un cupo inicial de créditos. Las demostraciones musicales necesitan sincronía exacta entre nota, imagen y texto, así que se producen localmente. En educación, [ChatPDF](https://www.chatpdf.com/) permite consultar documentos, pero una lección revisada y disponible sin subir archivos encaja mejor con estos materiales académicos. En programación y automatización se revisaron [Copilot](https://docs.github.com/en/copilot/get-started/plans) y [Make](https://www.make.com/pricing). Sus planes y unidades de consumo añaden dependencias ajenas al recorrido del artista. Como referencias de interacción, [Ableton Learning Music](https://learningmusic.ableton.com/es/) conecta conceptos con controles audibles en español y [Chrome Music Lab](https://musiclab.chromeexperiments.com/Experiments) separa cada experimento por fenómeno sonoro. La guía aplica esos criterios con piezas y ejercicios propios.
-
-### Matriz de repositorios, licencias e integración
-
-| Recurso | Función | Licencia | Costo | Viabilidad | Decisión |
-|---|---|---|---|---|---|
-| [CPython](https://github.com/python/cpython) y [SQLite](https://github.com/sqlite/sqlite) | HTTP local y registros persistentes | [PSF](https://docs.python.org/3/license.html) y [dominio público de SQLite](https://sqlite.org/copyright.html) | Sin costo | El módulo sqlite3 evita desplegar un segundo servicio. Un servidor local limita la superficie de exposición. | Integrados en el servidor. |
-| [pdf-lib 1.17.1](https://github.com/Hopding/pdf-lib/releases/tag/v1.17.1) | Componer un PDF en el navegador | [MIT](https://github.com/Hopding/pdf-lib/blob/master/LICENSE.md) | Sin costo | JavaScript autónomo, sin servidor de conversión. La distribución es antigua, por lo que se fija la versión y se restringe la entrada a campos de la ficha. | Integrada localmente. Solo se carga al exportar. |
-| [Tone.js](https://github.com/Tonejs/Tone.js) | Síntesis y programación temporal | MIT | Sin costo | Añade sintetizadores y un transporte a Web Audio. El laboratorio puede programar su secuencia directamente en el navegador. | Seleccionada la [API Web Audio](https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API) nativa. |
-| [wavesurfer.js](https://github.com/katspaugh/wavesurfer.js) | Ondas de audio navegables | BSD-3-Clause | Sin costo | Útil para editar regiones de una grabación. La guía trabaja con frases cortas, controles de capas y video con subtítulos. | Se conserva el reproductor nativo. |
-| [shadcn/ui](https://github.com/shadcn-ui/ui) y [Motion](https://github.com/motiondivision/motion) | Componentes de interfaz y animación | MIT en ambos repositorios | Sin costo por el código evaluado | La incorporación de un sistema de componentes y de otro motor de animación aumentaría el peso del cliente para un conjunto acotado de vistas. | HTML semántico, CSS editorial y controles nativos. |
-| [Lucide](https://github.com/lucide-icons/lucide) | Iconografía | [ISC y MIT para el subconjunto procedente de Feather](https://lucide.dev/license) | Sin costo | Biblioteca compatible con el navegador, pero las acciones principales ya se identifican con texto. | No se distribuye el paquete. |
-| [Drizzle ORM](https://github.com/drizzle-team/drizzle-orm) | Capa de acceso a datos tipada | Apache 2.0 | Sin costo | Orientado a TypeScript. El servidor accede a SQLite directamente desde Python. | SQL parametrizado y esquema explícito. |
-| [H5P PHP Library](https://github.com/h5p/h5p-php-library) | Contenidos educativos interactivos | GPL-3.0 | Sin costo | Requeriría un entorno PHP e integración de tipos de contenido. Las decisiones y explicaciones del curso caben en módulos locales. | Actividades propias y progreso del visitante en su navegador. |
-| [Remotion](https://github.com/remotion-dev/remotion) | Video programático | [Licencia propia](https://www.remotion.dev/docs/license/pricing) con elegibilidad y precios por organización | Variable | Requiere React y herramientas de render para los recursos. | Producción previa de clips y distribución de archivos reproducibles. |
-| [FFmpeg](https://github.com/FFmpeg/FFmpeg) | Codificación audiovisual | [LGPL-2.1+ o GPL según opciones de compilación](https://ffmpeg.org/legal.html) | Sin costo de licencia del proyecto | Útil en producción. El visitante solo necesita los archivos multimedia finales. | Opción de codificación fuera del servidor web. |
-| [OBS Studio](https://github.com/obsproject/obs-studio) | Capturar un taller o una interpretación real | GPL-2.0 o posterior | Sin costo | Instalación opcional en el equipo del docente. Capturar por pantalla exige preparar subtítulos y revisar la mezcla. | Alternativa para producir nuevas lecciones. |
-| [Playwright](https://github.com/microsoft/playwright) y [axe-core](https://github.com/dequelabs/axe-core) | Pruebas de navegador y accesibilidad automatizada | Apache 2.0 y MPL-2.0 | Sin costo | Herramientas de desarrollo compatibles con una web estática servida localmente. Necesitan un navegador, y axe detecta solo parte de los problemas de accesibilidad. | Candidatas para control de calidad, excluidas del cliente final. El registro de pruebas especifica qué se ejecutó. |
-
-Se contrastaron los repositorios con sus archivos de licencia y las páginas de versiones o actividad disponibles. Como señales de mantenimiento, se encontraron commits de noviembre de 2026 en [Tone.js](https://github.com/Tonejs/Tone.js/commits), [Drizzle](https://github.com/drizzle-team/drizzle-orm/commits) y [H5P](https://github.com/h5p/h5p-php-library/commits), y actividad del 23 de noviembre en CPython, SQLite y Playwright. Para pdf-lib la publicación señalada como más reciente por el repositorio sigue siendo 1.17.1. Se eligió para crear documentos desde cero, con licencia incluida y sin importar PDF ajenos. El examen de documentación y actividad del proyecto no constituye una auditoría del código de terceros.
+<div align="center">
+  <sub>Proyecto académico · Universidad Peruana de Ciencias Aplicadas (UPC) · Lima, Perú · <em>La IA propone. Tú decides.</em></sub>
+</div>

@@ -10,7 +10,7 @@ from server import connect, init_store
 
 
 def main():
-    members = [ROOT / name for name in ("README.md", "Iniciar.cmd", "server.py", "schema.sql", ".gitignore")]
+    members = [ROOT / name for name in ("README.md", "Iniciar.cmd", "server.py", "webapp.py", "schema.sql", ".gitignore")]
     for directory in ("public", "scripts", "tests"):
         members.extend(p for p in (ROOT / directory).rglob("*") if p.is_file()
                        and "__pycache__" not in p.parts and p.suffix != ".pyc")

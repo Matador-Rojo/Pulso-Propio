@@ -1,10 +1,5 @@
 import { lessons } from "./curriculum.js";
 
-const style = document.createElement("link");
-style.rel = "stylesheet";
-style.href = "./admin.css";
-document.head.append(style);
-
 function el(tag, text = "", className = "") {
   const element = document.createElement(tag);
   if (text !== "") element.textContent = text;
@@ -166,7 +161,9 @@ function simulatedReport() {
 
 function evaluations(root, authError) {
   const panel = el("section", "", "pp-panel");
-  panel.append(el("h2", "Evaluaciones recibidas"));
+  panel.append(el("h2", "Evaluaciones reales recibidas"));
+  const metrics = el("div", "", "pp-live-metrics");
+  metrics.hidden = true;
   const status = notice();
   const content = el("div");
   const previous = button("Anterior", "button", true);
@@ -183,7 +180,24 @@ function evaluations(root, authError) {
     try {
       const { rows, total, page } = await request("admin/feedback?page=" + pageNumber);
       current = page;
-      status.textContent = total ? total + " evaluaciones · Página " + page + " de " + Math.ceil(total / 20) : "Todavía no se han recibido evaluaciones.";
+      status.textContent = total ? total + " evaluaciones reales · Página " + page + " de " + Math.ceil(total / 20) : "Todavía no se han recibido evaluaciones reales desde la web.";
+      if (rows.length) {
+        const avg = (field) => (rows.reduce((sum, r) => sum + Number(r[field] || 0), 0) / rows.length).toFixed(2);
+        metrics.replaceChildren();
+        for (const [val, label] of [
+          [String(total), "Respuestas reales"],
+          [avg("navigation") + " / 5", "Navegación"],
+          [avg("clarity") + " / 5", "Claridad"],
+          [avg("usefulness") + " / 5", "Utilidad"],
+        ]) {
+          const box = el("div", "", "pp-metric-box");
+          box.append(el("strong", val), el("span", label));
+          metrics.append(box);
+        }
+        metrics.hidden = false;
+      } else {
+        metrics.hidden = true;
+      }
       const entries = rows.map(row => {
         const record = el("details", "", "pp-record");
         const date = new Intl.DateTimeFormat("es-PE", { dateStyle: "short", timeStyle: "short" }).format(new Date(row.created));
@@ -206,7 +220,7 @@ function evaluations(root, authError) {
   }
   previous.onclick = () => load(current - 1);
   next.onclick = () => load(current + 1);
-  panel.append(status, content, actions);
+  panel.append(metrics, status, content, actions);
   root.append(panel);
   load(1);
 }
@@ -311,6 +325,73 @@ function noteEditor(root, csrf, authError) {
   reload();
 }
 
+function communityModeration(root, csrf, authError) {
+  const panel = el("section", "", "pp-panel");
+  panel.append(el("h2", "Moderación de Comunidad"));
+  const status = notice();
+  const list = el("div");
+  const reloadBtn = button("Actualizar comunidad", "button", true);
+  panel.append(reloadBtn, status, list);
+  root.append(panel);
+
+  async function load() {
+    reloadBtn.disabled = true;
+    status.textContent = "Cargando publicaciones de la comunidad…";
+    try {
+      const { posts } = await request("admin/community");
+      list.replaceChildren();
+      if (!posts.length) {
+        status.textContent = "Aún no hay publicaciones reales en Comunidad.";
+        return;
+      }
+      status.textContent = `${posts.length} ${posts.length === 1 ? "publicación registrada" : "publicaciones registradas"} en Comunidad.`;
+      for (const post of posts) {
+        const rec = el("details", "", "pp-record");
+        const sum = el("summary", `${post.hidden ? "[Oculta] " : ""}${post.title} — ${post.author} (${post.category})`);
+        const body = el("div");
+        body.append(
+          el("p", post.body),
+          el("p", `Herramientas: ${post.tools || "—"} · Respuestas: ${post.replies.length} · Apoyos: ${post.likes}`)
+        );
+        const acts = el("div", "", "pp-actions");
+        const toggle = button(post.hidden ? "Mostrar" : "Ocultar", "button", true);
+        toggle.onclick = async () => {
+          toggle.disabled = true;
+          try {
+            await request("admin/community/moderate", { kind: "post", id: post.id, action: post.hidden ? "show" : "hide" }, csrf);
+            await load();
+          } catch (err) {
+            status.textContent = err.message;
+            authError(err);
+          }
+        };
+        const del = button("Eliminar", "button", true);
+        del.onclick = async () => {
+          del.disabled = true;
+          try {
+            await request("admin/community/moderate", { kind: "post", id: post.id, action: "delete" }, csrf);
+            await load();
+          } catch (err) {
+            status.textContent = err.message;
+            authError(err);
+          }
+        };
+        acts.append(toggle, del);
+        body.append(acts);
+        rec.append(sum, body);
+        list.append(rec);
+      }
+    } catch (error) {
+      status.textContent = error.message;
+      authError(error);
+    } finally {
+      reloadBtn.disabled = false;
+    }
+  }
+  reloadBtn.onclick = load;
+  load();
+}
+
 export function renderAdmin() {
   const root = page("Mesa de edición", "Revisa las evaluaciones del prototipo y edita las introducciones y las notas de la guía.", "Acceso del equipo");
   const region = el("div", "", "pp-adminbody");
@@ -369,8 +450,11 @@ export function renderAdmin() {
     const authError = error => { if (error.status === 401) login("La sesión caducó. Vuelve a ingresar."); };
     evaluations(region, authError);
     noteEditor(region, csrf, authError);
+    communityModeration(region, csrf, authError);
     region.append(simulatedReport());
   }
-  request("admin/session").then(({ csrf }) => dashboard(csrf)).catch(error => login(error.status === 401 ? "" : error.message));
+  request("admin/status")
+    .then(({ authenticated, csrf }) => (authenticated && csrf ? dashboard(csrf) : login("")))
+    .catch((error) => login(error.status === 401 ? "" : error.message));
   return root;
 }

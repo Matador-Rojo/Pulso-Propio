@@ -183,6 +183,58 @@ class ApiTests(unittest.TestCase):
                 else:
                     open_tab.assert_not_called()
 
+    def test_community_posts_replies_and_moderation(self):
+        # Reject non-https media_url (XSS/scheme safety)
+        status, _, _ = self.call("POST", "/api/community/posts", {
+            "author": "Banda Sur", "category": "Difusión multimedia",
+            "title": "Demo inválida", "media_url": "javascript:alert(1)",
+            "body": "Probando validación de esquema de enlace multimedia.",
+        })
+        self.assertEqual(status, 400)
+
+        # Create valid post
+        status, data, _ = self.call("POST", "/api/community/posts", {
+            "author": "Banda Sur", "city": "Lima", "category": "Difusión multimedia",
+            "title": "Huayno eléctrico con guitarra real",
+            "tools": "Basic Pitch MIDI + guitarra grabada",
+            "media_url": "https://youtube.com/watch?v=demo123",
+            "contact": "@bandasur.pe",
+            "body": "Grabamos guitarras reales sobre un borrador MIDI y buscamos bajista.",
+        })
+        self.assertEqual(status, 201)
+        post_id = data["post"]["id"]
+
+        # Reply and like
+        status, _, _ = self.call("POST", "/api/community/replies", {
+            "post_id": post_id, "author": "Valeria", "body": "¡Me apunto para grabar el bajo!",
+        })
+        self.assertEqual(status, 201)
+        status, data_like, _ = self.call("POST", "/api/community/like", {"post_id": post_id})
+        self.assertEqual(status, 200)
+        self.assertEqual(data_like["likes"], 1)
+
+        # Public listing shows 1 post with 1 reply
+        status, data_list, _ = self.call("GET", "/api/community")
+        self.assertEqual(status, 200)
+        posts = data_list["posts"]
+        self.assertEqual(len(posts), 1)
+        self.assertEqual(len(posts[0]["replies"]), 1)
+
+        # Admin moderation hides post from public listing
+        set_password(self.server.db_path, "clave-comunidad-segura")
+        status, data_login, headers = self.call("POST", "/api/admin/login", {"password": "clave-comunidad-segura"})
+        self.assertEqual(status, 200)
+        cookie = {k.lower(): v for k, v in headers.items()}["set-cookie"].split(";")[0]
+        csrf = data_login["csrf"]
+        status, _, _ = self.call(
+            "POST", "/api/admin/community/moderate",
+            {"kind": "post", "id": post_id, "action": "hide"},
+            headers={"Cookie": cookie, "X-CSRF-Token": csrf},
+        )
+        self.assertEqual(status, 200)
+        status, data_after, _ = self.call("GET", "/api/community")
+        self.assertEqual(data_after["posts"], [])
+
 
 if __name__ == "__main__":
     unittest.main()

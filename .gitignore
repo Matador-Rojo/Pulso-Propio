@@ -3,4 +3,5 @@ data/
 __pycache__/
 *.pyc
 node_modules/
+Pulso_Propio_Local/
 Pulso_Propio_Local.zip

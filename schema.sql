@@ -26,3 +26,25 @@ CREATE TABLE IF NOT EXISTS notes (
     revision INTEGER NOT NULL CHECK (revision > 0),
     intro TEXT NOT NULL DEFAULT ''
 );
+CREATE TABLE IF NOT EXISTS community_posts (
+    id INTEGER PRIMARY KEY,
+    created TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ','now')),
+    author TEXT NOT NULL,
+    city TEXT NOT NULL DEFAULT '',
+    category TEXT NOT NULL,
+    title TEXT NOT NULL,
+    tools TEXT NOT NULL DEFAULT '',
+    media_url TEXT NOT NULL DEFAULT '',
+    contact TEXT NOT NULL DEFAULT '',
+    body TEXT NOT NULL,
+    likes INTEGER NOT NULL DEFAULT 0,
+    hidden INTEGER NOT NULL DEFAULT 0
+);
+CREATE TABLE IF NOT EXISTS community_replies (
+    id INTEGER PRIMARY KEY,
+    post_id INTEGER NOT NULL REFERENCES community_posts(id) ON DELETE CASCADE,
+    created TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ','now')),
+    author TEXT NOT NULL,
+    body TEXT NOT NULL,
+    hidden INTEGER NOT NULL DEFAULT 0
+);

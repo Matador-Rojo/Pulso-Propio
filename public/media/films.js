@@ -3,10 +3,28 @@ export const films = [
   {
     "id": "silencio",
     "title": "Dejar un silencio",
-    "subject": "Fraseo",
+    "subject": "Fraseo · Idear",
+    "kind": "score",
+    "duration": 28,
+    "cuts": [
+      0,
+      3,
+      13,
+      23,
+      28
+    ],
+    "lessons": [
+      "introduccion",
+      "identidad"
+    ],
+    "labTab": "consola",
     "intro": "¿Qué cambia cuando callas el final?",
     "a": "Ocho ataques",
     "b": "Dos pulsos de aire",
+    "takeaways": [
+      "El silencio deliberado cambia la expectativa antes de un coro o respuesta vocal.",
+      "Compara siempre manteniendo fijo el tempo y el timbre para aislar el efecto del fraseo."
+    ],
     "captions": [
       "Observa la frase de ocho pulsos. Escucha lo que sucede al final.",
       "Versión A. La melodía toca ocho notas; Do y La cierran la frase.",
@@ -20,10 +38,28 @@ export const films = [
   {
     "id": "timbre",
     "title": "Cambiar el timbre",
-    "subject": "Instrumentación",
+    "subject": "Instrumentación · Componer",
+    "kind": "score",
+    "duration": 28,
+    "cuts": [
+      0,
+      3,
+      13,
+      23,
+      28
+    ],
+    "lessons": [
+      "melodias",
+      "arreglos"
+    ],
+    "labTab": "consola",
     "intro": "Una frase, dos formas de tocarla.",
     "a": "Cuerda pulsada",
     "b": "Tecla sostenida",
+    "takeaways": [
+      "Un ataque corto abre huecos rítmicos; un timbre sostenido llena el fondo armónico.",
+      "Cambiar el instrumento elegido por la banda transforma una armonía sugerida en algo propio."
+    ],
     "captions": [
       "Se mantienen las ocho alturas y el tempo. Concéntrate en el inicio y la cola del sonido.",
       "Versión A. Una cuerda simulada ataca enseguida y se apaga entre notas.",
@@ -37,10 +73,28 @@ export const films = [
   {
     "id": "balance",
     "title": "Dar espacio a la melodía",
-    "subject": "Mezcla",
+    "subject": "Mezcla · Producir",
+    "kind": "score",
+    "duration": 28,
+    "cuts": [
+      0,
+      3,
+      13,
+      23,
+      28
+    ],
+    "lessons": [
+      "produccion",
+      "mezcla"
+    ],
+    "labTab": "oido",
     "intro": "¿Qué instrumento queda al frente?",
     "a": "Base al frente",
     "b": "Melodía al frente",
+    "takeaways": [
+      "Compara siempre mezclas y masters al mismo volumen percibido.",
+      "Bajar una capa dominante suele funcionar mejor que subir todo a la vez."
+    ],
     "captions": [
       "Compara la relación entre percusión y melodía. Mantén fijo el volumen de reproducción.",
       "Versión A. La percusión domina y cuesta seguir la frase melódica.",
@@ -50,5 +104,125 @@ export const films = [
     "result": "El balance guía la escucha.",
     "color": "#e5d893",
     "bg": "#322b37"
+  },
+  {
+    "id": "voces",
+    "title": "Antes de usar una voz con IA",
+    "subject": "Voces y permisos · Proteger",
+    "kind": "chapters",
+    "duration": 48,
+    "cuts": [
+      0,
+      6,
+      14,
+      24,
+      34,
+      42,
+      48
+    ],
+    "lessons": [
+      "voces",
+      "permisos"
+    ],
+    "labTab": "semaforo",
+    "intro": "Guía visual en 6 pasos para decidir con criterio sobre voces sintéticas y clonadas.",
+    "a": "Voz guía de ensayo",
+    "b": "Lanzamiento autorizado",
+    "takeaways": [
+      "Distingue entre sintetizar una voz de biblioteca comercial y convertir o clonar una voz identificable.",
+      "El Art. 15 del Código Civil peruano protege la voz; un permiso de ensayo no cubre un estreno comercial.",
+      "Guarda evidencia del consentimiento y revisa si tu plan del servicio permite descargas comerciales."
+    ],
+    "captions": [
+      "1. Una voz con IA puede ayudarte a ensayar una melodía, pero publicarla exige revisar derechos y licencias.",
+      "2. Caso frecuente: los mashups virales con voces reconocibles abren conflictos de imagen, voz e interpretación.",
+      "3. Error común: creer que escribir la letra propia o renombrar el archivo te autoriza a usar el timbre de otra persona.",
+      "4. Aplica 4 filtros: origen de la toma, consentimiento (Art. 15 Código Civil), licencia del modelo y alcance del uso.",
+      "5. Alternativa segura: usa la voz sintética solo como maqueta interna y regraba con tu voz o un intérprete autorizado.",
+      "6. Pon a prueba estos criterios en el Semáforo de Derechos del Laboratorio y registra tu evidencia en la ficha PDF."
+    ],
+    "result": "Consentimiento y licencia antes del estreno.",
+    "color": "#ff9b7a",
+    "bg": "#23202a"
+  },
+  {
+    "id": "creditos",
+    "title": "Declarar créditos y ficha PDF",
+    "subject": "Transparencia · Proteger",
+    "kind": "chapters",
+    "duration": 48,
+    "cuts": [
+      0,
+      6,
+      14,
+      24,
+      34,
+      42,
+      48
+    ],
+    "lessons": [
+      "creditos",
+      "canciones",
+      "letras"
+    ],
+    "labTab": "creditos",
+    "intro": "Cómo documentar qué hiciste tú y dónde intervino la IA con verbos verificables.",
+    "a": "Crédito vago",
+    "b": "Crédito trazable",
+    "takeaways": [
+      "En la encuesta del equipo, el 80 % apoyó informar cuando una canción usa IA.",
+      "Usa verbos concretos (sugerir, reescribir, elegir, grabar, mezclar) vinculados a tomas reales.",
+      "Conserva tu ficha PDF fechada junto con capturas de licencias y versiones del proyecto."
+    ],
+    "captions": [
+      "1. Un crédito claro no le resta valor a tu canción: visibiliza las decisiones humanas detrás de la obra.",
+      "2. ¿Por qué importa? 8 de cada 10 encuestados en nuestra investigación apoyaron transparentar el uso de IA.",
+      "3. Evita fórmulas vagas como «producción digital» o «hecho con tecnología»: confunden al oyente y a plataformas.",
+      "4. Fórmula en 3 verbos: qué material entró, qué sugirió o procesó la IA y qué decidió o grabó el equipo humano.",
+      "5. Ejemplo verificable: «La IA sugirió la armonía en MIDI; la banda eligió timbres y grabó voces e instrumentos».",
+      "6. Practica en el Taller de Créditos del Laboratorio y descarga tu ficha de 8 apartados en Antes de publicar."
+    ],
+    "result": "La transparencia respalda tu firma.",
+    "color": "#f0d98c",
+    "bg": "#1e2722"
+  },
+  {
+    "id": "circulacion",
+    "title": "Publicar y circular con IA",
+    "subject": "Plataformas · Publicar",
+    "kind": "chapters",
+    "duration": 48,
+    "cuts": [
+      0,
+      6,
+      14,
+      24,
+      34,
+      42,
+      48
+    ],
+    "lessons": [
+      "publicacion"
+    ],
+    "labTab": "semaforo",
+    "intro": "Qué exigen YouTube, Deezer y APDAYC, y cómo diferenciarte como artista emergente.",
+    "a": "Subir sin revisar",
+    "b": "Lanzamiento estratégico",
+    "takeaways": [
+      "Hacer una canción más rápido no garantiza encontrar audiencia: la circulación requiere identidad.",
+      "APDAYC (2026) admite obras con apoyo de IA si existe contribución creativa humana verificable.",
+      "YouTube exige declarar contenido alterado/sintético y Deezer etiqueta pistas 100 % generadas."
+    ],
+    "captions": [
+      "1. Terminar el máster es solo la mitad del camino: publicar con IA implica reglas de plataformas y estrategia.",
+      "2. Reglas reales: YouTube pide declarar contenido sintético realista y Deezer detecta y etiqueta temas 100 % IA.",
+      "3. Registro en Perú: APDAYC admite obras con apoyo de IA solo cuando existe contribución creativa humana verificable.",
+      "4. Cuidado con el plan: una canción creada en plan gratuito no gana derechos comerciales automáticamente al pagar después.",
+      "5. Diferenciación: los proyectos virales con IA compiten en volumen; tu ventaja está en tu historia, vivo y comunidad.",
+      "6. Revisa los 8 apartados de Antes de publicar, guarda tu ficha PDF fechada y estrena con respaldo."
+    ],
+    "result": "Circula con identidad y respaldo.",
+    "color": "#8fd6c5",
+    "bg": "#1a2429"
   }
 ];

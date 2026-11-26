@@ -2,6 +2,7 @@
 import argparse
 import csv
 import getpass
+import gzip
 import hashlib
 import hmac
 import io
@@ -24,6 +25,14 @@ from uuid import UUID
 ROOT = Path(__file__).resolve().parent
 PUBLIC = ROOT / "public"
 CONSENT = "pulso-1"
+CSP = (
+    "default-src 'self'; script-src 'self'; style-src 'self'; "
+    "img-src 'self' data: blob:; media-src 'self' blob:; font-src 'self'; "
+    "connect-src 'self'; worker-src 'self'; manifest-src 'self'; "
+    "object-src 'none'; base-uri 'self'; frame-ancestors 'self'; form-action 'self'"
+)
+COMPRESSIBLE = {".html", ".css", ".js", ".mjs", ".svg", ".vtt", ".json", ".webmanifest"}
+IMMUTABLE_DIRS = {"fonts", "art", "media", "assets", "vendor"}
 RATINGS = ("navigation", "clarity", "usefulness")
 COLUMNS = ("id", "created", *RATINGS, "highlight", "improvement", "consent_version")
 HEADERS = ("Registro", "Fecha UTC", "Navegación", "Claridad", "Utilidad",
@@ -79,7 +88,8 @@ class Handler(SimpleHTTPRequestHandler):
     sys_version = ""
     extensions_map = {**SimpleHTTPRequestHandler.extensions_map,
                       ".js": "text/javascript", ".mjs": "text/javascript",
-                      ".vtt": "text/vtt", ".webm": "video/webm", ".woff2": "font/woff2"}
+                      ".vtt": "text/vtt", ".webm": "video/webm", ".woff2": "font/woff2",
+                      ".webp": "image/webp", ".webmanifest": "application/manifest+json"}
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, directory=str(PUBLIC), **kwargs)
@@ -92,6 +102,7 @@ class Handler(SimpleHTTPRequestHandler):
         self.send_header("X-Content-Type-Options", "nosniff")
         self.send_header("X-Frame-Options", "SAMEORIGIN")
         self.send_header("Referrer-Policy", "no-referrer")
+        self.send_header("Content-Security-Policy", CSP)
         super().end_headers()
 
     def list_directory(self, path):
@@ -100,6 +111,8 @@ class Handler(SimpleHTTPRequestHandler):
 
     def send_head(self):
         target = Path(self.translate_path(self.path)).resolve()
+        if target.is_dir():
+            target = (target / "index.html").resolve()
         if not target.is_relative_to(PUBLIC.resolve()) or any(
             p.startswith(".") for p in target.relative_to(PUBLIC.resolve()).parts
         ):
@@ -109,7 +122,52 @@ class Handler(SimpleHTTPRequestHandler):
         byte_range = self.headers.get("Range")
         if byte_range and target.suffix.lower() in {".mp4", ".webm", ".wav", ".mp3", ".ogg"} and target.is_file():
             return self.media_range(target, byte_range)
-        return super().send_head()
+        if not target.is_file():
+            self.send_error(404)
+            return None
+        stat = target.stat()
+        etag = f'W/"{stat.st_mtime_ns:x}-{stat.st_size:x}"'
+        rel_parts = target.relative_to(PUBLIC.resolve()).parts
+        cache_control = (
+            "public, max-age=86400" if rel_parts and rel_parts[0] in IMMUTABLE_DIRS else "no-cache"
+        )
+        if self.headers.get("If-None-Match") == etag:
+            self.send_response(304)
+            self.send_header("ETag", etag)
+            self.send_header("Cache-Control", cache_control)
+            self.end_headers()
+            return None
+        accept_enc = self.headers.get("Accept-Encoding", "")
+        use_gzip = (
+            self.command == "GET"
+            and "gzip" in accept_enc
+            and target.suffix.lower() in COMPRESSIBLE
+            and stat.st_size >= 512
+        )
+        ctype = self.guess_type(str(target))
+        if use_gzip:
+            compressed = gzip.compress(target.read_bytes(), compresslevel=6)
+            self.send_response(200)
+            self.send_header("Content-Type", ctype)
+            self.send_header("Content-Encoding", "gzip")
+            self.send_header("Vary", "Accept-Encoding")
+            self.send_header("ETag", etag)
+            self.send_header("Cache-Control", cache_control)
+            self.send_header("Content-Length", str(len(compressed)))
+            self.end_headers()
+            return io.BytesIO(compressed)
+        stream = target.open("rb")
+        self.send_response(200)
+        self.send_header("Content-Type", ctype)
+        self.send_header("ETag", etag)
+        self.send_header("Cache-Control", cache_control)
+        if target.suffix.lower() in COMPRESSIBLE:
+            self.send_header("Vary", "Accept-Encoding")
+        if target.suffix.lower() in {".mp4", ".webm", ".wav", ".mp3", ".ogg"}:
+            self.send_header("Accept-Ranges", "bytes")
+        self.send_header("Content-Length", str(stat.st_size))
+        self.end_headers()
+        return stream
 
     def media_range(self, target, value):
         size = target.stat().st_size
@@ -140,15 +198,18 @@ class Handler(SimpleHTTPRequestHandler):
         return stream
 
     def copyfile(self, source, outputfile):
-        if self.range_length is None:
-            return super().copyfile(source, outputfile)
-        remaining = self.range_length
-        while remaining:
-            chunk = source.read(min(remaining, 64 * 1024))
-            if not chunk:
-                break
-            outputfile.write(chunk)
-            remaining -= len(chunk)
+        try:
+            if self.range_length is None:
+                return super().copyfile(source, outputfile)
+            remaining = self.range_length
+            while remaining:
+                chunk = source.read(min(remaining, 64 * 1024))
+                if not chunk:
+                    break
+                outputfile.write(chunk)
+                remaining -= len(chunk)
+        except (BrokenPipeError, ConnectionResetError, ConnectionAbortedError):
+            pass
 
     def do_HEAD(self):
         if self.path.startswith("/api/"):
@@ -231,8 +292,22 @@ class Handler(SimpleHTTPRequestHandler):
             }, {}
         if action == ("POST", "/api/feedback"):
             return self.feedback(db, data)
+        if action == ("GET", "/api/community"):
+            return self.community_list(db)
+        if action == ("POST", "/api/community/posts"):
+            return self.community_create_post(db, data)
+        if action == ("POST", "/api/community/replies"):
+            return self.community_create_reply(db, data)
+        if action == ("POST", "/api/community/like"):
+            return self.community_like_post(db, data)
         if action == ("POST", "/api/admin/login"):
             return self.login(db, data)
+        if action == ("GET", "/api/admin/status"):
+            try:
+                active = self.session(db)
+                return 200, {"authenticated": True, "csrf": active["csrf"]}, {}
+            except Problem:
+                return 200, {"authenticated": False}, {}
         if not route.startswith("/api/admin/"):
             raise Problem(404, "Ruta desconocida.")
         session = self.session(db)
@@ -282,7 +357,107 @@ class Handler(SimpleHTTPRequestHandler):
             db.execute("INSERT OR REPLACE INTO notes (lesson, body, intro, revision) VALUES (?, ?, ?, ?)",
                        (name, body, intro, revision + 1))
             return 200, {"revision": revision + 1, "body": body, "intro": intro}, {}
+        if action == ("GET", "/api/admin/community"):
+            return self.community_list(db, include_hidden=True)
+        if action == ("POST", "/api/admin/community/moderate"):
+            return self.community_moderate(db, data)
         raise Problem(404, "Ruta desconocida.")
+
+    def community_list(self, db, include_hidden=False):
+        where = "" if include_hidden else "WHERE hidden = 0"
+        posts = [dict(row) for row in db.execute(
+            f"SELECT id, created, author, city, category, title, tools, media_url, contact, body, likes, hidden "
+            f"FROM community_posts {where} ORDER BY id DESC LIMIT 50"
+        )]
+        reply_where = "" if include_hidden else "WHERE hidden = 0"
+        replies_by_post = {}
+        for row in db.execute(
+            f"SELECT id, post_id, created, author, body, hidden FROM community_replies {reply_where} ORDER BY id ASC"
+        ):
+            replies_by_post.setdefault(row["post_id"], []).append(dict(row))
+        for post in posts:
+            post["replies"] = replies_by_post.get(post["id"], [])
+        return 200, {"posts": posts}, {}
+
+    def community_create_post(self, db, data):
+        allowed_cats = {"Difusión multimedia", "Busco colaboración", "Debate e IA", "Consejo de herramienta"}
+        author = clean_text(data.get("author", ""), 60)
+        city = clean_text(data.get("city", ""), 60)
+        category = data.get("category", "")
+        title = clean_text(data.get("title", ""), 120)
+        tools = clean_text(data.get("tools", ""), 140)
+        media_url = clean_text(data.get("media_url", ""), 240)
+        contact = clean_text(data.get("contact", ""), 100)
+        body = clean_text(data.get("body", ""), 1200)
+        if len(author) < 2:
+            raise Problem(400, "Escribe tu nombre artístico o banda (mínimo 2 caracteres).")
+        if category not in allowed_cats:
+            raise Problem(400, "Elige una categoría válida para tu publicación.")
+        if len(title) < 3:
+            raise Problem(400, "Escribe un título de al menos 3 caracteres.")
+        if len(body) < 10:
+            raise Problem(400, "Cuenta un poco más de tu experiencia o consulta (mínimo 10 caracteres).")
+        if media_url:
+            parsed_url = urlsplit(media_url)
+            if parsed_url.scheme != "https" or not parsed_url.netloc:
+                raise Problem(400, "El enlace multimedia debe empezar con https:// (YouTube, SoundCloud, Spotify, etc.).")
+        cur = db.execute(
+            "INSERT INTO community_posts (author, city, category, title, tools, media_url, contact, body) "
+            "VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+            (author, city, category, title, tools, media_url, contact, body),
+        )
+        row = dict(db.execute(
+            "SELECT id, created, author, city, category, title, tools, media_url, contact, body, likes, hidden "
+            "FROM community_posts WHERE id = ?", (cur.lastrowid,)
+        ).fetchone())
+        row["replies"] = []
+        return 201, {"post": row}, {}
+
+    def community_create_reply(self, db, data):
+        post_id = data.get("post_id")
+        if type(post_id) is not int or post_id <= 0:
+            raise Problem(400, "Publicación no válida.")
+        author = clean_text(data.get("author", ""), 60)
+        body = clean_text(data.get("body", ""), 600)
+        if len(author) < 2 or len(body) < 3:
+            raise Problem(400, "Completa tu nombre y un mensaje de al menos 3 caracteres.")
+        exists = db.execute("SELECT id FROM community_posts WHERE id = ? AND hidden = 0", (post_id,)).fetchone()
+        if not exists:
+            raise Problem(404, "La publicación ya no está disponible.")
+        cur = db.execute(
+            "INSERT INTO community_replies (post_id, author, body) VALUES (?, ?, ?)",
+            (post_id, author, body),
+        )
+        reply = dict(db.execute(
+            "SELECT id, post_id, created, author, body, hidden FROM community_replies WHERE id = ?",
+            (cur.lastrowid,)
+        ).fetchone())
+        return 201, {"reply": reply}, {}
+
+    def community_like_post(self, db, data):
+        post_id = data.get("post_id")
+        if type(post_id) is not int or post_id <= 0:
+            raise Problem(400, "Publicación no válida.")
+        cur = db.execute("UPDATE community_posts SET likes = likes + 1 WHERE id = ? AND hidden = 0", (post_id,))
+        if not cur.rowcount:
+            raise Problem(404, "Publicación no encontrada.")
+        likes = db.execute("SELECT likes FROM community_posts WHERE id = ?", (post_id,)).fetchone()["likes"]
+        return 200, {"id": post_id, "likes": likes}, {}
+
+    def community_moderate(self, db, data):
+        kind = data.get("kind")
+        item_id = data.get("id")
+        mod_action = data.get("action")
+        if kind not in {"post", "reply"} or type(item_id) is not int or item_id <= 0 or mod_action not in {"hide", "show", "delete"}:
+            raise Problem(400, "Acción de moderación no válida.")
+        table = "community_posts" if kind == "post" else "community_replies"
+        if mod_action == "delete":
+            if kind == "post":
+                db.execute("DELETE FROM community_replies WHERE post_id = ?", (item_id,))
+            db.execute(f"DELETE FROM {table} WHERE id = ?", (item_id,))
+        else:
+            db.execute(f"UPDATE {table} SET hidden = ? WHERE id = ?", (1 if mod_action == "hide" else 0, item_id))
+        return 200, {"ok": True}, {}
 
     def feedback(self, db, data):
         if data.get("consent") is not True or data.get("consent_version") != CONSENT:

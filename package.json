@@ -1,0 +1,20 @@
+{
+  "name": "pulso-propio-google",
+  "version": "1.0.0",
+  "description": "Guía multimedia para artistas emergentes peruanos. Sigue una canción desde la primera letra hasta su ficha de créditos. El laboratorio permite escuchar qué cambia al elegir otro timbre, dejar dos pulsos de silencio o añadir percusión.",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "axe-core": "^4.14.1",
+    "playwright-core": "^1.65.1"
+  }
+}

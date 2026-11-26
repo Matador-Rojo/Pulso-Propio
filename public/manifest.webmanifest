@@ -1,0 +1,19 @@
+{
+  "name": "Pulso Propio · Música e inteligencia artificial",
+  "short_name": "Pulso Propio",
+  "description": "Guía multimedia, laboratorio sonoro y ficha de créditos para artistas emergentes del Perú que exploran la IA en su música.",
+  "lang": "es-PE",
+  "start_url": "/#/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f5f1e6",
+  "theme_color": "#f5f1e6",
+  "icons": [
+    {
+      "src": "/assets/pulso.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

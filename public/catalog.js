@@ -1,4 +1,6 @@
-// Editorial records are bundled with the site. Filtering never calls an external service.
+// Editorial records are bundled with the site. Filtering uses local Fuse.js (krisk/fuse) with zero external calls.
+import Fuse from './vendor/fuse.min.mjs';
+
 export const catalog = [
   {
     name: 'AIVA', category: 'Composición', access: 'Freemium',
@@ -15,6 +17,22 @@ export const catalog = [
     accessNote: 'Ollama se distribuye con licencia MIT. La variante Qwen2.5 de 1,5 mil millones de parámetros usa Apache 2.0. Descarga el modelo para ejecutarlo localmente.',
     limit: 'El tamaño del modelo cambia el consumo de memoria y puede cambiar la licencia. Cuenta las sílabas tú mismo y revisa las frases que parezcan prestadas.',
     links: [['Ver el modelo', 'https://ollama.com/library/qwen2.5:1.5b'], ['Código y licencia de Ollama', 'https://github.com/ollama/ollama']]
+  },
+  {
+    name: 'Synthesizer V (Dreamtonics)', category: 'Voces', access: 'Licencia perpetua',
+    summary: 'Sintetizador vocal editable nota por nota con bancos comerciales y control fino de expresión, fonemas y vibrato.',
+    practice: 'Escribe una melodía MIDI propia con tu letra en español. Ajusta el vibrato y la respiración en la última sílaba y compárala con tu propia toma cantada.',
+    accessNote: 'Editor de pago único (licencia perpetua) más bancos de voz licenciados individualmente; permite uso comercial de las canciones renderizadas.',
+    limit: 'Revisa el acuerdo específico de cada banco vocal de terceros si planeas usar el nombre comercial del personaje virtual en portada.',
+    links: [['Sitio oficial de Synthesizer V', 'https://dreamtonics.com/synthesizerv/']]
+  },
+  {
+    name: 'ACE Studio', category: 'Voces', access: 'Suscripción / Licencia',
+    summary: 'Estudio de voces e instrumentos cantados por IA con edición MIDI, coros multicapa y licencias royalty-free.',
+    practice: 'Usa una voz de biblioteca para ensayar armonías de coro a dos voces sobre tu estribillo y luego decide si las regrabas con tu grupo.',
+    accessNote: 'Ofrece planes de suscripción y licencia perpetua; las voces preentrenadas incluidas en la biblioteca cuentan con derechos comerciales royalty-free.',
+    limit: 'Asegúrate de tener derechos sobre cualquier audio de referencia o letra que subas para generar interpretaciones personalizadas.',
+    links: [['Abrir ACE Studio', 'https://acestudio.ai/']]
   },
   {
     name: 'Kits AI', category: 'Voces', access: 'Freemium',
@@ -41,6 +59,22 @@ export const catalog = [
     links: [['Explorar la creación con letra', 'https://suno.com/tools/lyrics-generator'], ['Condiciones de distribución', 'https://help.suno.com/en/articles/2410177']]
   },
   {
+    name: 'Udio', category: 'Canciones completas', access: 'Freemium',
+    summary: 'Genera y extiende canciones por secciones (intro, verso, estribillo, cierre) controlando estructura y estilo.',
+    practice: 'Usa tu propia letra para generar dos versiones del puente de 30 segundos y analiza qué cambio armónico te inspira a regrabar con instrumentos reales.',
+    accessNote: 'Plan gratuito no comercial con créditos limitados; planes Standard y Pro orientados a uso comercial.',
+    limit: 'Sus términos de descarga y distribución han cambiado durante acuerdos con sellos discográficos. Comprueba las condiciones vigentes antes de planificar un lanzamiento.',
+    links: [['Abrir Udio', 'https://www.udio.com/']]
+  },
+  {
+    name: 'ElevenLabs Music', category: 'Canciones completas', access: 'Freemium',
+    summary: 'Generación musical, bases instrumentales y efectos de sonido por texto integrados en la plataforma de audio de ElevenLabs.',
+    practice: 'Describe una atmósfera instrumental sobria sin batería para acompañar una lectura poética o introducción de canción y evalúa si deja espacio a tu voz.',
+    accessNote: 'El plan gratuito (10 000 créditos/mes) es estrictamente no comercial; los planes de pago desde Starter habilitan derechos comerciales.',
+    limit: 'Verifica siempre las condiciones específicas de Music Terms vigentes en tu cuenta antes de monetizar pistas o efectos generados.',
+    links: [['Abrir ElevenLabs Music', 'https://elevenlabs.io/music']]
+  },
+  {
     name: 'Moises', category: 'Producción', access: 'Freemium',
     summary: 'Separa voces, batería y bajo de una mezcla para escuchar cómo dialogan las capas.',
     practice: 'Usa una maqueta propia. Silencia la batería durante el segundo verso y decide si ese espacio favorece la entrada del coro.',
@@ -49,12 +83,28 @@ export const catalog = [
     links: [['Abrir Moises', 'https://moises.ai/'], ['Límites de separación', 'https://help.moises.ai/hc/en-us/articles/29530482524316-Which-instruments-can-be-separated-on-the-Free-plan']]
   },
   {
+    name: 'Lalal.ai', category: 'Producción', access: 'Freemium',
+    summary: 'Separación de stems de alta precisión (voz, batería, guitarra, piano) y reducción de eco o ruido de sala.',
+    practice: 'Sube una toma casera propia con eco de cuarto y compara la pista procesada contra el original al mismo volumen para comprobar si conserva naturalidad.',
+    accessNote: 'Ofrece vista previa gratuita sin licencia comercial; los paquetes de minutos y suscripciones de pago habilitan uso comercial sobre archivos autorizados.',
+    limit: 'Debes poseer los derechos o permiso expreso del audio que subes; no uses stems extraídos de canciones ajenas para publicar remixes sin autorización.',
+    links: [['Abrir Lalal.ai', 'https://www.lalal.ai/']]
+  },
+  {
     name: 'BandLab Mastering', category: 'Masterización', access: 'Freemium',
     summary: 'Compara tratamientos de masterización sobre una misma mezcla estéreo.',
     practice: 'Compara Tape y Clarity con el original a un volumen percibido parecido. Escucha los platos y las consonantes antes de elegir.',
     accessNote: 'Universal, Fire, Clarity y Tape están disponibles de forma gratuita. BandLab reserva otros ajustes para su membresía.',
     limit: 'Los ajustes actúan sobre la mezcla que entregas. Si una frase queda tapada por el bajo, vuelve al proyecto multipista para corregir su balance.',
     links: [['Abrir BandLab Mastering', 'https://www.bandlab.com/mastering'], ['Ajustes y planes', 'https://help.bandlab.com/hc/en-us/articles/360001374513-Using-BandLab-Mastering-on-your-songs']]
+  },
+  {
+    name: 'LANDR Mastering', category: 'Masterización', access: 'Freemium',
+    summary: 'Masterización asistida por IA con ajuste de intensidad y comparación de perfiles (Warm, Balanced, Open).',
+    practice: 'Escucha la vista previa en audífonos y en el parlante del celular bajando el volumen del máster hasta igualar tu mezcla antes de decidir.',
+    accessNote: 'Permite vistas previas gratuitas; las descargas en WAV/HD y funciones de revisión requieren pago por pista o suscripción.',
+    limit: 'No corrige errores de mezcla ni sibilancias severas: trata el máster automático como referencia o último pulido de una mezcla ya equilibrada.',
+    links: [['Abrir LANDR Mastering', 'https://www.landr.com/online-audio-mastering/']]
   },
   {
     name: 'Mubert Render', category: 'Música para video', access: 'Freemium',
@@ -99,7 +149,7 @@ function filterSelect(label, all, values) {
   select.add(new Option(all, ''));
   for (const value of values) select.add(new Option(value, value));
   control.append(node('span', '', label), select);
-  return {control, select};
+  return { control, select };
 }
 
 function toolDetails(item) {
@@ -111,7 +161,7 @@ function toolDetails(item) {
   indicator.setAttribute('aria-hidden', 'true');
   summary.append(title, node('span', 'catalog-meta', item.category), node('span', 'catalog-access', item.access), indicator);
   const body = node('div', 'catalog-body');
-  for (const [label, description] of [['Prueba de escucha', item.practice], ['Acceso', item.accessNote], ['Antes de usar el resultado', item.limit]]) {
+  for (const [label, description] of [['Prueba de escucha', item.practice], ['Acceso y licencia', item.accessNote], ['Antes de usar el resultado', item.limit]]) {
     const section = node('div');
     section.append(node('h3', '', label), node('p', '', description));
     body.append(section);
@@ -130,15 +180,19 @@ function toolDetails(item) {
   return details;
 }
 
-export function renderCatalog(ctx) {
+export function renderCatalog() {
   const page = node('section', 'catalog-page');
   const header = node('header', 'catalog-header');
-  header.append(node('h1', '', 'Catálogo de herramientas'), node('p', '', 'Elige una etapa de tu canción. Abre cada ficha para probar una idea, comparar planes y consultar las condiciones del creador.'));
+  header.append(
+    node('p', 'eyebrow', '16 herramientas documentadas · 2025–2026'),
+    node('h1', '', 'Catálogo de herramientas'),
+    node('p', '', 'Elige una etapa de tu canción (letras, melodía, voces, canciones completas, separación o masterización). Abre cada ficha para probar una idea y revisar sus condiciones comerciales.')
+  );
   const filters = node('div', 'catalog-filters');
   const searchLabel = node('label', 'catalog-field');
   const search = node('input');
   search.type = 'search';
-  search.placeholder = 'Voz, MIDI, Suno…';
+  search.placeholder = 'Voz, MIDI, Suno, Udio, Synthesizer…';
   searchLabel.append(node('span', '', 'Buscar herramienta'), search);
   const unique = (field) => [...new Set(catalog.map(item => item[field]))].sort((a, b) => a.localeCompare(b, 'es'));
   const category = filterSelect('Etapa musical', 'Todas las etapas', unique('category'));
@@ -149,12 +203,47 @@ export function renderCatalog(ctx) {
   const status = node('p', 'catalog-status');
   status.setAttribute('role', 'status');
   const results = node('div', 'catalog-list');
+  const indexed = catalog.map((item) => ({
+    item,
+    name: normalized(item.name),
+    category: normalized(item.category),
+    access: normalized(item.access),
+    summary: normalized(item.summary),
+    practice: normalized(item.practice),
+    limit: normalized(item.limit),
+  }));
+  const fuse = new Fuse(indexed, {
+    keys: [
+      { name: 'name', weight: 0.45 },
+      { name: 'category', weight: 0.25 },
+      { name: 'summary', weight: 0.2 },
+      { name: 'practice', weight: 0.1 },
+    ],
+    threshold: 0.28,
+    ignoreLocation: true,
+    minMatchCharLength: 3,
+  });
+
   function update() {
-    const term = normalized(search.value.trim());
-    const matches = catalog.filter(item => (!category.select.value || item.category === category.select.value)
+    const raw = search.value.trim();
+    const term = normalized(raw);
+    const byDropdown = catalog.filter(item =>
+      (!category.select.value || item.category === category.select.value)
       && (!access.select.value || item.access === access.select.value)
-      && normalized([item.name, item.category, item.access, item.summary, item.practice, item.limit].join(' ')).includes(term));
-    status.textContent = matches.length + (matches.length === 1 ? ' herramienta' : ' herramientas');
+    );
+    let matches = byDropdown;
+    if (term) {
+      const exact = byDropdown.filter((item) =>
+        normalized([item.name, item.category, item.access, item.summary, item.practice, item.limit].join(' ')).includes(term)
+      );
+      if (exact.length > 0) {
+        matches = exact;
+      } else {
+        const allowed = new Set(byDropdown);
+        matches = fuse.search(term).map((r) => r.item.item).filter((item) => allowed.has(item));
+      }
+    }
+    status.textContent = matches.length + (matches.length === 1 ? ' herramienta' : ' herramientas') + (term && !catalog.some(i => normalized([i.name, i.category, i.summary].join(' ')).includes(term)) && matches.length ? ' (coincidencia aproximada)' : '');
     reset.disabled = !search.value && !category.select.value && !access.select.value;
     results.replaceChildren(...matches.map(toolDetails));
     if (!matches.length) results.append(node('p', 'catalog-empty', 'No encontramos una herramienta con esos filtros. Prueba con otra etapa o limpia la búsqueda.'));
@@ -167,7 +256,7 @@ export function renderCatalog(ctx) {
   search.addEventListener('input', update);
   category.select.addEventListener('change', update);
   access.select.addEventListener('change', update);
-  const source = node('p', 'catalog-source', 'Condiciones consultadas el 23 de noviembre de 2026. Confirma el plan y la licencia en la fuente oficial antes de publicar.');
+  const source = node('p', 'catalog-source', 'Condiciones revisadas en noviembre de 2026. Confirma siempre el plan y la licencia vigente en la fuente oficial antes de publicar.');
   page.append(header, filters, status, results, source);
   update();
   return page;

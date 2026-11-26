@@ -1,4 +1,4 @@
-"""Aplicaci�n WSGI para publicar Pulso Propio con PythonAnywhere."""
+"""Aplicación WSGI para publicar Pulso Propio con PythonAnywhere."""
 import json
 import os
 import sqlite3
@@ -10,7 +10,7 @@ from types import SimpleNamespace
 
 from flask import Flask, Response, request, send_from_directory
 
-from server import Handler, Problem, PUBLIC, ROOT, connect, init_store
+from server import CSP, Handler, Problem, PUBLIC, ROOT, connect, init_store
 
 
 app = Flask(__name__, static_folder=None)
@@ -47,6 +47,7 @@ def response_headers(response):
     response.headers["X-Content-Type-Options"] = "nosniff"
     response.headers["X-Frame-Options"] = "SAMEORIGIN"
     response.headers["Referrer-Policy"] = "no-referrer"
+    response.headers["Content-Security-Policy"] = CSP
     return response
 
 
@@ -54,15 +55,15 @@ def response_headers(response):
 def api(route):
     try:
         if request.host.lower() != app.config["PULSO_HOST"]:
-            raise Problem(400, "Servidor no v�lido.")
+            raise Problem(400, "Servidor no válido.")
         if request.method == "POST":
             origin = request.headers.get("Origin")
             if origin and origin != "https://" + app.config["PULSO_HOST"]:
-                raise Problem(403, "El origen de la solicitud no est� permitido.")
+                raise Problem(403, "El origen de la solicitud no está permitido.")
             if request.mimetype != "application/json":
-                raise Problem(415, "Env�a los datos como JSON.")
+                raise Problem(415, "Envía los datos como JSON.")
             if not request.content_length or request.content_length > 16384:
-                raise Problem(413, "El formulario supera el l�mite permitido.")
+                raise Problem(413, "El formulario supera el límite permitido.")
             try:
                 data = json.loads(request.get_data().decode("utf-8"))
             except (ValueError, UnicodeError, RecursionError):
@@ -88,7 +89,7 @@ def api(route):
         response = app.json.response(error="No se pudo acceder a los datos. Intenta de nuevo.")
         response.status_code = 503
     except (ValueError, UnicodeError):
-        response = app.json.response(error="Solicitud no v�lida.")
+        response = app.json.response(error="Solicitud no válida.")
         response.status_code = 400
     response.headers["Cache-Control"] = "no-store"
     return response
@@ -103,4 +104,3 @@ def static_file(path):
 
 
 application = app
-
